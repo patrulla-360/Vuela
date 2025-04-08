@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reportes | Minutos volados</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
+    <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background-color: #333;
+            color: white;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .navbar img.logo {
+            height: 40px;
+        }
+
+        .toggle-button {
+            cursor: pointer;
+            color: white;
+            font-size: 24px;
+            margin-right: 1330px;
+            transition: margin-right 0.6s; /* Agregamos una transición */
+        }
+
+        .wrapper {
+            display: flex;
+            flex: 1;
+        }
+
+        .sidebar {
+            width: 150px;
+            height: 250vh;
+            background-color: #333;
+            color: white;
+            transition: width 0.6s;
+        }
+
+        .sidebar.closed {
+            width: 30px;
+            overflow: hidden;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar.closed a {
+            opacity: 0;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            margin-left: 15px; /* Añadimos un margen izquierdo para acomodar la barra lateral */
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between; /* Añadimos un espacio entre las tarjetas */
+        }
+
+        .card {
+            flex: 0 0 calc(33.33% - 20px); /* Ajustamos el ancho de las tarjetas */
+            background-color: #fff;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            margin-bottom: 20px; /* Agregamos un margen inferior para las tarjetas */
+            text-align: center;
+        }
+
+        .logo {
+            width: 50px;
+            margin-right: 3px;
+            height: 50px;
+        }
+
+        .title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-right: 5px;
+            transition: margin-right 0.3s;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar-menu li a {
+            display: block;
+            padding: 10px;
+            color: #fff;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .sidebar-menu li a:hover {
+            background-color: #555;
+            color: #fff;
+        }
+
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .content {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            font-size: 28px;
+        }
+
+        .crear-paquete-button {
+            display: inline-block;
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .crear-paquete-button:hover {
+            background-color: #0056b3;
+        }
+
+        #datatable {
+            width: 100%;
+        }
+
+        table {
+            background-color: #fff;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333;
+            color: #fff;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .show-details-button {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .show-details-button:hover {
+            background-color: #0056b3;
+        }
+
+        .data-details {
+            background-color: #f4f4f4;
+        }
+
+        .details-content {
+            padding: 10px;
+        }
+
+        .detail-item {
+            margin: 5px 0;
+        }
+
+        .anular-venta-button {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .anular-venta-button:hover {
+            background-color: #c82333;
+        }
+
+
+        .btn-container {
+            display: flex; /* Para colocar los botones uno al lado del otro */
+        }
+
+        .btn-container form {
+            margin-right: 10px; /* Espacio entre los botones */
+        }
+
+        .btn-edit, .btn-delete {
+            padding: 8px 12px; /* Aumentar el tamaño del botón */
+            font-size: 16px; /* Aumentar el tamaño del icono */
+            color: #fff; /* Color del icono */
+            border: none; /* Sin borde adicional */
+            border-radius: 50px; /* Bordes redondeados */
+            display: inline-flex; /* Centrar el ícono verticalmente */
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .btn-edit {
+            background-color: #28a745; /* Verde para Editar */
+        }
+
+        .btn-delete {
+            background-color: #dc3545; /* Rojo para Eliminar */
+        }
+
+        .btn-edit:hover, .btn-delete:hover {
+            opacity: 0.9; /* Efecto de opacidad al pasar el cursor */
+        }
+
+        .btn-edit:hover, .btn-delete:hover {
+            opacity: 0.8; /* Efecto de opacidad al pasar el cursor */
+        }
+
+        .id-hoy {
+            background-color: #449ff5 !important; /* Asegura que el fondo se aplique */
+            font-weight: bold;
+            color: white !important; /* Asegura que el texto sea blanco */
+            padding: 5px;
+            border-radius: 5px;
+            text-align: center; /* Centra el texto */
+            display: inline-block; /* Permite un tamaño más ajustado al texto */
+        }
+
+        .btn-print {
+            background-color: #007bff; /* Color azul */
+            color: #fff;
+            padding: 8px 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .btn-print:hover {
+            opacity: 0.8;
+        }
+
+        .date-filters {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-form {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
+        }
+
+        .filter-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .date-input {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .date-input:focus {
+            border-color: #007BFF;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+
+        .btn-filter {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 9px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            align-self: flex-end;
+            margin-top: 20px;
+        }
+
+        .btn-filter:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+            .filter-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn-filter {
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            .filter-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn-filter {
+                width: 100%;
+                margin-top: 10px;
+            }
+        }
+
+        #table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        #table thead th {
+            background-color: #333;
+            color: white;
+            font-weight: bold;
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 2px solid #333;
+        }
+
+        #table tbody tr {
+            transition: background-color 0.3s;
+        }
+
+        #table tbody tr:hover {
+            background-color: #f0f7ff;
+        }
+
+        #table tbody td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        #table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .sales-cell {
+            font-weight: bold;
+            text-align: start;
+            color: #333;
+        }
+
+    </style>
+</head>
+<body>
+<div class="navbar">
+    <img src="static/images/logo.png" alt="Logo de la compañía" class="logo">
+    <span class="title">Vuela App</span>
+    <div class="toggle-button" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </div>
+</div>
+<div class="wrapper">
+    <div class="sidebar">
+        <ul class="sidebar-menu">
+            <li><a href="/"><i class="fas fa-cogs"></i> Panel</a></li>
+            <li><a href="/ventas"><i class="fas fa-chart-line"></i> Ventas</a></li>
+            <li><a href="/clientes"><i class="fas fa-users"></i> Clientes</a></li>
+            <li><a href="/agendar"><i class="fas fa-calendar-alt"></i> Agendar</a></li>
+            <li><a href="/vuelosdeldia"><i class="fas fa-plane"></i> Vuelos del Día</a></li>
+            <li><a href="/instructores"><i class="fas fa-chalkboard-teacher"></i> Instructores</a></li>
+            <li><a href="/paquetes"><i class="fas fa-gifts"></i> Paquetes</a></li>
+            <li><a href="/giftcards"><i class="fas fa-gift"></i> Giftcards</a></li>
+            <li><a href="/gastos"><i class="fas fa-money-bill"></i> Gastos</a></li>
+            <li><a href="/ingresos"><i class="fas fa-money-bill-wave"></i> Ingresos</a></li>
+            <li><a href="/cierres"><i class="fas fa-lock"></i> Cierres</a></li>
+            <li><a href="/reportes"><i class="fas fa-file-alt"></i> Reportes</a></li>
+            <li><a href="/insite"><i class="fas fa-users"></i> Usuarios</a></li>
+            <li><a href="/salir"><i class="fas fa-sign-out-alt"></i> Salir</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        <h1>Minutos volados</h1>
+        <div class="date-filters">
+            <form action="/reporte_minutos" method="get" class="filter-form">
+                <div class="filter-group">
+                    <label for="fecha_inicio">Fecha desde:</label>
+                    <input type="date" id="fecha_inicio" name="fecha_inicio" class="date-input">
+                </div>
+
+                <div class="filter-group">
+                    <label for="fecha_fin">Fecha hasta:</label>
+                    <input type="date" id="fecha_fin" name="fecha_fin" class="date-input">
+                </div>
+
+                <button type="submit" class="btn-filter">Filtrar</button>
+            </form>
+        </div>
+        <span style="font-size: 1.8rem">Total minutos volados: <strong id="formatted-total">{{ total }}</strong></span>
+    </div>
+</div>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
+<script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const totalElement = document.getElementById('formatted-total');
+        totalElement.textContent = parseInt(totalElement.textContent) + '';
+        const urlParams = new URLSearchParams(window.location.search);
+        const fechaInicioParam = urlParams.get('fecha_inicio');
+        const fechaFinParam = urlParams.get('fecha_fin');
+        if (fechaFinParam) {
+            document.getElementById('fecha_fin').value = fechaFinParam;
+        } else {
+            const today = new Date();
+            document.getElementById('fecha_fin').value = today.toISOString().split('T')[0];
+        }
+        if (fechaInicioParam) {
+            document.getElementById('fecha_inicio').value = fechaInicioParam;
+        } else {
+            const twoMonthsAgo = new Date();
+            twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
+            document.getElementById('fecha_inicio').value = twoMonthsAgo.toISOString().split('T')[0];
+        }
+    });
+</script>
+</body>
+</html>
